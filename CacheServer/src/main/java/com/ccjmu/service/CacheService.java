@@ -72,95 +72,25 @@ public class CacheService {
     }
 
     // 更新缓存区物料信息的送货区域字段 使用高德地图获取送货地址字段
-    public CompletableFuture<List<String>> updatearea(String cacheorderid){
-
-        CompletableFuture<ActionResult> resultfuture = new CompletableFuture<>();
+    public CompletableFuture<ActionResult> updatearea(String cacheorderid){
         CompletableFuture<List<String>> sqlsfuture = new CompletableFuture<>();
-
         final CompletableFuture<SQLConnection> connfuture = DBHelper.getcon();
         connfuture.thenComposeAsync(res->DBHelper.Querysql(res,Utils.getbasequerysql("erp_cache_ordergoods",new JsonObject().put("cacheorderid",cacheorderid))))
-                .thenComposeAsync(res->getupdataareasql(res)).whenCompleteAsync((res,e)->{
+                .thenComposeAsync(res->
+                        {
+                            try
+                            {
+                                connfuture.get().close();
+                            } catch (Exception ex)
+                            {
+                                logger.error(ex.getMessage());
+                            }
+                            return getupdataareasql(res);
+                        })
+                .whenCompleteAsync((res,e)->{
                     sqlsfuture.complete(res);
-        });
-//                .whenCompleteAsync((res,e)->
-//                        {
-//                            List<CompletableFuture> completableFuturelist = new ArrayList<>();
-//                            List<String> sqls = new ArrayList<>();
-//                            for(JsonObject datarow:res.getRows()){
-//                                if(datarow.getString("receaddr").length()>0) {
-//                                    CompletableFuture<ActionResult> sub = gaodeAPI.getformaddress(Utils.trimall(datarow.getString("receaddr")), String.valueOf(datarow.getInteger("id")));
-//                                    completableFuturelist.add(sub);
-//                                }
-//                            }
-//                            CompletableFuture[] completableFutures=new CompletableFuture[completableFuturelist.size()];
-//                            CompletableFuture[] finalCompletableFutures = completableFuturelist.toArray(completableFutures);
-//                            CompletableFuture.allOf(finalCompletableFutures)
-//                                    .whenCompleteAsync((subres,sube)->{
-//                                        if(sube!=null){
-//                                            logger.info(sube.getMessage());
-//                                            sqlsfuture.complete(sqls);
-//                                        }else
-//                                        {
-//                                            for(CompletableFuture<ActionResult> subfuture:finalCompletableFutures)
-//                                            {
-//                                                try
-//                                                {
-//                                                    sqls.add(subfuture.get().getDatastr());
-//                                                } catch (Exception ex)
-//                                                {
-//                                                    ex.printStackTrace();
-//                                                }
-//                                            }
-//                                        }
-//
-//                                        sqlsfuture.complete(sqls);
-//
-//                                    });
-//
-//                        }
-//                );
-
-
-        return sqlsfuture;
-
-//                .thenComposeAsync(res->{
-//                    connfuture.thenAcceptAsync(subres->subres.close());
-//                    return getupdataareasql(res);
-//                })
-//                .thenComposeAsync(
-//                        res->
-//                                DBHelper.dosqlswithtrans(res)
-//                );
-
-//                .whenCompleteAsync((res,e)-> {
-//                    List<CompletableFuture> completableFuturelist = new ArrayList<>();
-//
-//                    List<String> sqls = new ArrayList<>();
-//                    for(JsonObject datarow:res.getRows()){
-//                        if(datarow.getString("receaddr").length()>0) {
-//                            CompletableFuture<ActionResult> sub = gaodeAPI.getformaddress(datarow.getString("receaddr"), String.valueOf(datarow.getInteger("id")));
-//                            completableFuturelist.add(sub);
-//                        }
-//                    }
-//                    CompletableFuture[] completableFutures=new CompletableFuture[completableFuturelist.size()];
-//                    CompletableFuture[] finalCompletableFutures = completableFuturelist.toArray(completableFutures);
-//                    CompletableFuture.allOf(finalCompletableFutures)
-//                            .whenCompleteAsync((subres,sube)->{
-//                               for(CompletableFuture<ActionResult> subfuture:finalCompletableFutures)
-//                               {
-//                                   try
-//                                   {
-//                                       sqls.add(subfuture.get().getDatastr());
-//                                   } catch (Exception ex)
-//                                   {
-//                                       ex.printStackTrace();
-//                                   }
-//                               }
-//                                sqlsfuture.complete(sqls);
-//                            });
-//
-//                });
-
+                });
+        return sqlsfuture.thenComposeAsync(DBHelper::dosqlswithtrans);
     }
 
     // 更新区域信息
@@ -180,7 +110,6 @@ public class CacheService {
             try {
 
                 for(CompletableFuture<ActionResult> sub: finalCompletableFutures){
-//                    sub.whenCompleteAsync((r,e)->todosqls.add(r.getDatastr()));
                     ActionResult tmpar = sub.get();
 
                     todosqls.add(Utils.getbaseupdatesql(
