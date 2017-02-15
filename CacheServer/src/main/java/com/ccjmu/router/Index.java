@@ -3,6 +3,7 @@ package com.ccjmu.router;
 import com.ccjmu.app;
 import com.ccjmu.controller.CacheController;
 import com.ccjmu.controller.DemoController;
+import com.ccjmu.controller.JSONController;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.logging.Logger;
@@ -26,6 +27,7 @@ public class Index {
     private static Router router;
     private static DemoController demoController = new DemoController();
     private static CacheController cacheController = new CacheController();
+    private static JSONController jsonController = new JSONController();
 
     public static void inirouter(){
         logger.info("ini Router");
@@ -45,6 +47,12 @@ public class Index {
         router.post("/create").handler(cacheController::createcacheorder);
         router.post("/adaptorderby").handler(cacheController::adaptorderbycacheid);
         router.post("/adaptarea").handler(cacheController::adaptareabycacheid);
+
+        router.post("/jsoninsert").handler(jsonController::insertJsonData);
+        router.post("/jsonupdate").handler(jsonController::insertJsonData);
+        router.post("/jsonsearch").handler(jsonController::searchJsonData);
+
+        router.post("/mass").handler(jsonController::createmass);
     }
 
     public static Router getrouter(){

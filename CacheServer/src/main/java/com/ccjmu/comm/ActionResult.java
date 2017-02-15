@@ -5,9 +5,13 @@ package com.ccjmu.comm;
  * Created by yunan on 2017/2/8.
  */
 public class ActionResult {
+    // 操作结果标记位
     private String resultflag="";
+    // 操作结果数据
     private String datastr="";
+    // 错误信息数据
     private String errstr="";
+    // 附加字段
     private String tag="";
 
     public static ActionResult GetActionResult(boolean issucceed,String contentstr,String taginfo) {

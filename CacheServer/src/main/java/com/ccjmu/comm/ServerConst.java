@@ -36,6 +36,10 @@ public class ServerConst {
     public final static String SQL_BASEUPDATE = resourceBundle.getString("sql.baseupdate");
     // 基础查询语句
     public final static String SQL_BASEQUERY = resourceBundle.getString("sql.basequery");
+
+
+
+
     // 更新缓存区物料表cacheorderid
     public final static String SQL_UPDATE_CACHEORDERID = resourceBundle.getString("sql.update.cacheorderid");
     // 适配缓存区物料表语句

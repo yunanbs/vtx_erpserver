@@ -5,10 +5,15 @@ import io.vertx.core.json.JsonObject;
 import java.util.Date;
 
 /**
+ * json对象适配
  * Created by yunan on 2017/2/8.
  */
 public class ObjectAdapt {
-    // 适配cacheorder对象
+    /**
+     * cacacheorder对象适配
+     * @param srcobj 原始json数据
+     * @return
+     */
     public static JsonObject GetOrderObj(JsonObject srcobj){
         return  new JsonObject(){{
             put("erp_sellerid",srcobj.getString("seller_id"));
@@ -31,7 +36,11 @@ public class ObjectAdapt {
         }};
     }
 
-    // 适配cacheordergoods对象
+    /**
+     * 适配cacheordergoods对象
+     * @param srcobj 原始json数据
+     * @return
+     */
     public static JsonObject GetOrdergoosObj(JsonObject srcobj){
         return  new JsonObject(){{
             put("erp_goodsid",srcobj.getString("goods_id"));

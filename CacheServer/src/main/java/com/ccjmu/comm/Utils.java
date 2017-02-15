@@ -5,10 +5,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.SimpleFormatter;
 
 /**
@@ -16,19 +13,39 @@ import java.util.logging.SimpleFormatter;
  */
 public class Utils {
 
-    // 获取高德api返回地址中的行政区名称
+    /**
+     * 获取高德api返回地址中的行政区名称
+     * @param srcaddress
+     * @return
+     */
     public static String getareanamefrompoi(String srcaddress){
         String result = "";
+        // 获取poi列表
         JsonArray srcobj = new JsonObject(srcaddress).getJsonArray("pois");
         if(srcobj.size()>0)
+            // 返回第一个poi的行政区
             result = srcobj.getJsonObject(0).getString("adname");
         return result;
 
     }
 
-    // Date转字符串
+    public static String getuuid(){
+        return UUID.randomUUID().toString().replace("-","");
+    }
+
+    /**
+     * 时间转字符串
+     * @param datetime
+     * @return
+     */
     public static String gettimestring(Date datetime){
         SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return  sdt.format(datetime);
+    }
+
+    // Date转字符串
+    public static String gettimestring(Date datetime,String Format){
+        SimpleDateFormat sdt = new SimpleDateFormat(Format);
         return  sdt.format(datetime);
     }
 
