@@ -28,6 +28,8 @@ public class ServerConst {
     public final static int WEBAPI_GAODE_PORT = Integer.parseInt(resourceBundle.getString("webapi.gaode.port"));
     public final static String WEBAPI_GAODE_URL = resourceBundle.getString("webapi.gaode.url");
 
+    // Log Format
+    public final static String LOG_FAIL =  "fail:%s Message:%s";
 
     // sql配置
     // 基础插入语句
@@ -37,9 +39,6 @@ public class ServerConst {
     // 基础查询语句
     public final static String SQL_BASEQUERY = resourceBundle.getString("sql.basequery");
 
-
-
-
     // 更新缓存区物料表cacheorderid
     public final static String SQL_UPDATE_CACHEORDERID = resourceBundle.getString("sql.update.cacheorderid");
     // 适配缓存区物料表语句
@@ -47,4 +46,8 @@ public class ServerConst {
     // 适配缓存区订单信息
     public final static String SQL_ADAPT_CACHEORDER = resourceBundle.getString("sql.adapt.cacheorder");
 
+    // json——查询用户组信息
+    public final static String SQL_JSON_LIST_USERGROUPS = resourceBundle.getString("sql.json.list.usergroups");
+    // json——查询用户信息
+    public final static String SQL_JSON_LIST_USERS = resourceBundle.getString("sql.json.list.users");
 }

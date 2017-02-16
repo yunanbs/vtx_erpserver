@@ -4,7 +4,6 @@ import com.ccjmu.app;
 import com.ccjmu.controller.CacheController;
 import com.ccjmu.controller.DemoController;
 import com.ccjmu.controller.JSONController;
-import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -48,11 +47,30 @@ public class Index {
         router.post("/adaptorderby").handler(cacheController::adaptorderbycacheid);
         router.post("/adaptarea").handler(cacheController::adaptareabycacheid);
 
-        router.post("/jsoninsert").handler(jsonController::insertJsonData);
-        router.post("/jsonupdate").handler(jsonController::insertJsonData);
-        router.post("/jsonsearch").handler(jsonController::searchJsonData);
+        //router.post("/jsoninsert").handler(jsonController::insertJsonData);
+        //router.post("/jsonupdate").handler(jsonController::insertJsonData);
+        //router.post("/jsonsearch").handler(jsonController::searchJsonData);
+        //
+        //router.post("/mass").handler(jsonController::createmass);
 
-        router.post("/mass").handler(jsonController::createmass);
+        // 基础查询
+        // 集合查询
+        router.get("/v1/basesearch/:searchtype").handler(jsonController::searcheByType);
+        // 集合对象查询
+        router.get("/v1/basesearch/:searchtype/:uuid").handler(jsonController::searcheByType);
+        // 子集查询
+        router.get("/v1/basesearch/:searchtype/:uuid/:subtype").handler(jsonController::searcheByType);
+        // 子集对象查询
+        router.get("/v1/basesearch/:searchtype/:uuid/:subtype/:subid").handler(jsonController::searcheByType);
+
+        // 创建对象
+        router.post("/v1/:datatype").handler(jsonController::createByType);
+
+        // 全量更新数据(json格式不支持全量更新)
+        //router.put("/v1/:datatype/:uuid").handler(jsonController::createByType);
+
+        // 字段增量更新
+        router.put("/v1/:datatype/:uuid").handler(jsonController::updateByType);
     }
 
     public static Router getrouter(){
@@ -68,6 +86,7 @@ public class Index {
         allowmethod.add(HttpMethod.POST);
         allowmethod.add(HttpMethod.GET);
         allowmethod.add(HttpMethod.OPTIONS);
+        allowmethod.add(HttpMethod.PATCH);
         return allowmethod;
     }
 
